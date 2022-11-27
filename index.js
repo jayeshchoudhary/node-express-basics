@@ -4,6 +4,22 @@ const app = express();
 
 app.use(express.json());
 
+app.get("/students", (req, res) => {
+    console.log(req.query);
+    try {
+        const data = fs.readFileSync("students.json", "utf8");
+        let studentData = JSON.parse(data);
+
+        studentData = studentData.filter((student) =>
+            student.name.includes(req.query.name)
+        );
+
+        res.status(200).json(studentData);
+    } catch (err) {
+        res.status(500).json({ error: true, message: "something went wrong" });
+    }
+});
+
 // GET students data
 app.get("/students/all", (req, res) => {
     try {
